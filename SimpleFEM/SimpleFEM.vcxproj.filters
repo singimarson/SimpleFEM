@@ -15,48 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SimpleFEM.cpp">
+    <ClCompile Include="src/SimpleFEM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FEMesh.cpp">
+    <ClCompile Include="src/FEMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FEMeshCreator.cpp">
+    <ClCompile Include="src/FEMeshCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C3DPoint.cpp">
+    <ClCompile Include="src/C3DPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FEDomain.cpp">
+    <ClCompile Include="src/FEDomain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FELineMesh.cpp">
+    <ClCompile Include="src/FELineMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FERectangularMesh.cpp">
+    <ClCompile Include="src/FERectangularMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FEMesh.h">
+    <ClInclude Include="include/FEMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FEMeshCreator.h">
+    <ClInclude Include="include/FEMeshCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C3DPoint.h">
+    <ClInclude Include="include/C3DPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FEDomain.h">
+    <ClInclude Include="include/FEDomain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FELineMesh.h">
+    <ClInclude Include="include/FELineMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FERectangularMesh.h">
+    <ClInclude Include="include/FERectangularMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FETypes.h">
+    <ClInclude Include="include/FETypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
