@@ -128,22 +128,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src/C3DPoint.cpp" />
-    <ClCompile Include="src/FEDomain.cpp" />
-    <ClCompile Include="src/FELineMesh.cpp" />
-    <ClCompile Include="src/FEMesh.cpp" />
-    <ClCompile Include="src/FEMeshCreator.cpp" />
-    <ClCompile Include="src/FERectangularMesh.cpp" />
-    <ClCompile Include="src/SimpleFEM.cpp" />
+    <ClCompile Include="C3DPoint.cpp" />
+    <ClCompile Include="FEDomain.cpp" />
+    <ClCompile Include="FELineMesh.cpp" />
+    <ClCompile Include="FEMesh.cpp" />
+    <ClCompile Include="FEMeshCreator.cpp" />
+    <ClCompile Include="FERectangularMesh.cpp" />
+    <ClCompile Include="SimpleFEM.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include/C3DPoint.h" />
-    <ClInclude Include="include/FEDomain.h" />
-    <ClInclude Include="include/FELineMesh.h" />
-    <ClInclude Include="include/FEMesh.h" />
-    <ClInclude Include="include/FEMeshCreator.h" />
-    <ClInclude Include="include/FERectangularMesh.h" />
-    <ClInclude Include="include/FETypes.h" />
+    <ClInclude Include="C3DPoint.h" />
+    <ClInclude Include="FEDomain.h" />
+    <ClInclude Include="FELineMesh.h" />
+    <ClInclude Include="FEMesh.h" />
+    <ClInclude Include="FEMeshCreator.h" />
+    <ClInclude Include="FERectangularMesh.h" />
+    <ClInclude Include="FETypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

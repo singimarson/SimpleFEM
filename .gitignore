@@ -3,3 +3,6 @@ build/
 
 # Ignore the .vs files
 .vs/
+
+# Ignore the testing files
+testing/
