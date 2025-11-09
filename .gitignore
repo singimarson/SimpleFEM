@@ -6,3 +6,6 @@ build/
 
 # Ignore the testing files
 testing/
+
+# Ignore x64 files
+x64/

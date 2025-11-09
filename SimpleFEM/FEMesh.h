@@ -1,6 +1,7 @@
 #pragma once
 
 #include "C3DPoint.h"
+#include "FEDomain.h"
 #include "FETypes.h"
 
 #include <unordered_map>
@@ -10,7 +11,7 @@
 class FEMesh
 {
 public:
-	FEMesh(int iDimension);
+	FEMesh(FEDomain* pDomain);
 	~FEMesh() = default;
 
 	virtual bool SupportsObjectType(const long objType) const
@@ -38,14 +39,14 @@ public:
 		return true;
 	}
 
-	FEMesh::ElementShape GetElementShape() const { return m_eElementShape; };
-
-	int GetDimension() const { return m_iDimension; }
-	bool SetDimension(const int dim)
+	FEDomain* GetDomain() const { return m_pDomain; }
+	bool SetDomain(FEDomain* pDomain)
 	{
-		m_iDimension = dim;
+		m_pDomain = pDomain;
 		return true;
 	}
+
+	FEMesh::ElementShape GetElementShape() const { return m_eElementShape; };
 
 	std::unordered_map<int, C3DPoint> GetNodes() const { return m_vNodes; }
 	bool SetNodes(const std::unordered_map<int, C3DPoint>& nodes)
@@ -62,7 +63,7 @@ public:
 	}
 
 private:
-	int m_iDimension = 1; // Dimension of the mesh (1D, 2D, 3D), could probably be templated but worry about that later
+	FEDomain* m_pDomain = nullptr;
 
 	FEMesh::ElementShape m_eElementShape = ElementShape::eLine; ///< Shape of the elements, Line for now
 	FEMesh::MeshType m_eMeshType = MeshType::eUniform;			///< Type of mesh, Uniform for now

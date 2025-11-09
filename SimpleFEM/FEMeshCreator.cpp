@@ -1,5 +1,5 @@
+#include "FEDomain.h"
 #include "FEMeshCreator.h"
-#include "FELineMesh.h"
 
 #include <stdexcept>
 
@@ -28,18 +28,24 @@ void FEMeshCreator::CreateUniformMesh(const int iElementNumber)
 	std::unordered_map<int, C3DPoint> mapNodes;
 	std::unordered_map<int, std::vector<int>> mapElements;
 
-	switch (m_pMesh->GetDimension())
+	FEDomain* pDomain = m_pMesh->GetDomain();
+
+	switch (pDomain->GetDimension())
 	{
 		case 1:
 		{
 			// If we have dimension 1, then the mesh will always be a line mesh
-			if (!m_pMesh->SupportsObjectType(FE_OBJ_TYPE_LINE_MESH))
+			// Reconfigure this to work with C3DPoint
+			std::vector<C3DPoint> vDomainOutline = pDomain->GetDomainOutline();
+			if (vDomainOutline.size() != 2)
 			{
-				throw std::runtime_error("FEMeshCreator::CreateUniformMesh: The provided mesh is not a line mesh for 1D meshing.");
+				throw std::runtime_error("FEMeshCreator::CreateUniformMesh: Size of domain outline is incorrect");
 			}
 
-			FELineMesh* pLineMesh = static_cast<FELineMesh*>(m_pMesh.get());
-			const double dLength = pLineMesh->GetLength();
+			C3DPoint ptX0 = vDomainOutline.front();
+			C3DPoint ptXn1 = vDomainOutline.back();
+			C3DPoint ptLineDiff = ptXn1 - ptX0;
+			const double dLength = ptLineDiff.GetX();
 			const double dElementLength = dLength / static_cast<double>(iElementNumber);
 
 			/*
@@ -49,12 +55,12 @@ void FEMeshCreator::CreateUniformMesh(const int iElementNumber)
 			x_0  x_1  x_2         x_n  x_(n+1)
 			Where there are 'iElementNumber' elements and 'iElementNumber + 1' nodes
 
-			x_i = i * (dElementLength / iElementNumber) for i = 0 to iElementNumber
+			x_i = x_0 + i * (dElementLength / iElementNumber) for i = 0 to iElementNumber
 			*/
 
 			for (int iElementIndex = 0; iElementIndex < iElementNumber + 1; ++iElementIndex)
 			{
-				C3DPoint ptNodeLocation(iElementIndex * (dElementLength / iElementNumber), 0.0, 0.0);
+				C3DPoint ptNodeLocation(ptX0.GetX() + iElementIndex * (dElementLength / iElementNumber), 0.0, 0.0);
 				mapNodes[iElementIndex] = ptNodeLocation;
 
 				if (iElementIndex == 0)

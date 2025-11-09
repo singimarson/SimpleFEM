@@ -3,11 +3,18 @@
 
 #include <iostream>
 
+#include "FEDomain.h"
 #include "FEMesh.h"
+
+#include <memory>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    int iDimension = 1;
+    std::unique_ptr<FEDomain> pDomain = std::make_unique<FEDomain>(iDimension);
+
+    std::cout << "Hello World!\n" << std::endl;
+    std::cout << "Dimension of pDomain = " << pDomain->GetDimension() << "\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

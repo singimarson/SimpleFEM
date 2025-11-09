@@ -41,7 +41,7 @@ bool FEDomain::VerifyDomain(const std::vector<C3DPoint>& vDomainOutline)
 			// ^                                   ^
 			// 0                                   1
 
-			if (m_vDomainOutline.size() != 2 ||
+			if (vDomainOutline.size() != 2 ||
 				vDomainOutline[0].GetY() != 0.0 || vDomainOutline[0].GetZ() != 0.0 ||
 				vDomainOutline[1].GetY() != 0.0 || vDomainOutline[1].GetZ() != 0.0)
 			{
