@@ -1,22 +1,25 @@
 #pragma once
 
-#include "C3DPoint.h"
+#include "Point.h"
 #include "FEDomain.h"
+#include "FEObject.h"
 #include "FETypes.h"
 
 #include <unordered_map>
 #include <vector>
 
 // Forward declaration of the FEMesh class
-class FEMesh
+template <std::size_t dim>
+class FEMesh : public FEObject
 {
 public:
-	FEMesh(FEDomain* pDomain);
-	~FEMesh() = default;
+	FEMesh(FEDomain<dim>* pDomain);
+	virtual ~FEMesh() {};
 
-	virtual bool SupportsObjectType(const long objType) const
+	// Object Type
+	virtual bool SupportsObjectType(const long objType) override
 	{
-		return (objType == FE_OBJ_TYPE_MESH);
+		return ( FEObject::SupportsObjectType(objType) || objType == FE_OBJ_TYPE_MESH);
 	}
 
 	enum class MeshType
@@ -39,8 +42,8 @@ public:
 		return true;
 	}
 
-	FEDomain* GetDomain() const { return m_pDomain; }
-	bool SetDomain(FEDomain* pDomain)
+	FEDomain<dim>* GetDomain() const { return m_pDomain; }
+	bool SetDomain(FEDomain<dim>* pDomain)
 	{
 		m_pDomain = pDomain;
 		return true;
@@ -48,8 +51,8 @@ public:
 
 	FEMesh::ElementShape GetElementShape() const { return m_eElementShape; };
 
-	std::unordered_map<int, C3DPoint> GetNodes() const { return m_vNodes; }
-	bool SetNodes(const std::unordered_map<int, C3DPoint>& nodes)
+	std::unordered_map<int, Point<dim>> GetNodes() const { return m_vNodes; }
+	bool SetNodes(const std::unordered_map<int, Point<dim>>& nodes)
 	{
 		m_vNodes = nodes;
 		return true;
@@ -63,12 +66,12 @@ public:
 	}
 
 private:
-	FEDomain* m_pDomain = nullptr;
+	FEDomain<dim>* m_pDomain = nullptr;
 
 	FEMesh::ElementShape m_eElementShape = ElementShape::eLine; ///< Shape of the elements, Line for now
 	FEMesh::MeshType m_eMeshType = MeshType::eUniform;			///< Type of mesh, Uniform for now
 
-	std::unordered_map<int, C3DPoint> m_vNodes;		 ///< member variable to store node numbers and coordinates
+	std::unordered_map<int, Point<dim>> m_vNodes;		 ///< member variable to store node numbers and coordinates
 	std::unordered_map<int, std::vector<int>> m_vElements; ///< Member variable to store element numbers and connectivity	
 };
 

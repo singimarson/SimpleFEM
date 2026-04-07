@@ -129,16 +129,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="C3DPoint.cpp" />
     <ClCompile Include="FEDomain.cpp" />
+    <ClCompile Include="FEFunction.cpp" />
+    <ClCompile Include="FEIntegrator.cpp" />
     <ClCompile Include="FEMesh.cpp" />
-    <ClCompile Include="FEMeshCreator.cpp" />
+    <ClCompile Include="MeshCreator.cpp" />
+    <ClCompile Include="FEObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C3DPoint.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="FEDomain.h" />
+    <ClInclude Include="FEFunction.h" />
+    <ClInclude Include="FEIntegrator.h" />
     <ClInclude Include="FEMesh.h" />
-    <ClInclude Include="FEMeshCreator.h" />
+    <ClInclude Include="MeshCreator.h" />
+    <ClInclude Include="FEObject.h" />
     <ClInclude Include="FETypes.h" />
   </ItemGroup>
   <ItemGroup>

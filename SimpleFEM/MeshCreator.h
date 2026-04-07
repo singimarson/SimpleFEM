@@ -6,15 +6,16 @@
 
 // Forward declaration of the FEMeshCreator class
 // This class is intended to create and manage finite element meshes
-class FEMeshCreator
+template<std::size_t dim>
+class MeshCreator
 {
 public:
-	FEMeshCreator(FEMesh* pMesh);
-	~FEMeshCreator() = default;
+	MeshCreator(FEMesh<dim>* pMesh);
+	~MeshCreator() = default;
 
 	void CreateUniformMesh(const int iElementNumber);
 
 private:
-	std::unique_ptr<FEMesh> m_pMesh; // Pointer to the FEMesh object being created
+	FEMesh<dim>* m_pMesh = nullptr; // Pointer to the FEMesh object being created
 };
 

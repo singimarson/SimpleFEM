@@ -10,11 +10,11 @@
 
 int main()
 {
-    int iDimension = 1;
-    std::unique_ptr<FEDomain> pDomain = std::make_unique<FEDomain>(iDimension);
+    const std::size_t dim = 1;
+    std::unique_ptr<FEDomain<dim>> pDomain = std::make_unique<FEDomain<dim>>();
 
     std::cout << "Hello World!\n" << std::endl;
-    std::cout << "Dimension of pDomain = " << pDomain->GetDimension() << "\n";
+    std::cout << "Dimension of pDomain = " << dim << "\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

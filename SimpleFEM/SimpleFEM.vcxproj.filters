@@ -18,18 +18,24 @@
     <ClCompile Include="FEMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FEMeshCreator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C3DPoint.cpp">
+    <ClCompile Include="MeshCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FEDomain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FEObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FEFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FEIntegrator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C3DPoint.h">
+    <ClInclude Include="Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FEDomain.h">
@@ -38,10 +44,19 @@
     <ClInclude Include="FEMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FEMeshCreator.h">
+    <ClInclude Include="MeshCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FETypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FEObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FEFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FEIntegrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

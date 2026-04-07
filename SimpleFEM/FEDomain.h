@@ -1,32 +1,33 @@
 #pragma once
 
-#include "C3DPoint.h"
+#include "Point.h"
+#include "FEObject.h"
+#include "FETypes.h"
 
 #include <vector>
 
 // Forward declaration of the FEDomain class
-class FEDomain
+template <std::size_t dim>
+class FEDomain : public FEObject
 {
 public:
-	FEDomain(const int iDimension);
-	FEDomain(const int iDimension, const std::vector<C3DPoint>& vDomainOutline);
-	~FEDomain() = default;
+	FEDomain() = default;
+	FEDomain(const std::vector<Point<dim>>& vDomainOutline);
+	virtual ~FEDomain() {};
 
-	// Getters and setters
-	int GetDimension() const { return m_iDimension; }
-	bool SetDimension(const int iDimension)
+	// Object type
+	virtual bool SupportsObjectType(const long objType) override
 	{
-		m_iDimension = iDimension;
-		return true;
+		return (FEObject::SupportsObjectType(objType) || objType == FE_OBJ_TYPE_DOMAIN);
 	}
 
-	std::vector<C3DPoint> GetDomainOutline() const { return m_vDomainOutline; }
-	bool SetDomainOutline(const std::vector<C3DPoint>& vDomainOutline);
+	// Getters and setters
+	std::vector<Point<dim>> GetDomainOutline() const { return m_vDomainOutline; }
+	bool SetDomainOutline(const std::vector<Point<dim>>& vDomainOutline);
 
 private:
-	bool VerifyDomain(const std::vector<C3DPoint>& vDomainOutline);
+	bool VerifyDomain(const std::vector<Point<dim>>& vDomainOutline);
 
-	int m_iDimension = 1;
-	std::vector<C3DPoint> m_vDomainOutline;
+	std::vector<Point<dim>> m_vDomainOutline;
 };
 

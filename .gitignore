@@ -5,7 +5,7 @@ build/
 .vs/
 
 # Ignore the testing files
-testing/
+# testing/
 
 # Ignore x64 files
 x64/

@@ -2,11 +2,9 @@
 
 #include <stdexcept>
 
-// Constructor
-FEDomain::FEDomain(const int iDimension) : m_iDimension(iDimension) {}
-
 // Constructor for if users want to initialize with the domain outline
-FEDomain::FEDomain(const int iDimension, const std::vector<C3DPoint>& vDomainOutline) : m_iDimension(iDimension)
+template<std::size_t dim>
+FEDomain<dim>::FEDomain(const std::vector<Point<dim>>& vDomainOutline) : FEObject()
 {
 	if (!SetDomainOutline(vDomainOutline))
 	{
@@ -15,7 +13,8 @@ FEDomain::FEDomain(const int iDimension, const std::vector<C3DPoint>& vDomainOut
 }
 
 // Sets the domain outline 
-bool FEDomain::SetDomainOutline(const std::vector<C3DPoint>& vDomainOutline)
+template<std::size_t dim>
+bool FEDomain<dim>::SetDomainOutline(const std::vector<Point<dim>>& vDomainOutline)
 {
 	if (VerifyDomain(vDomainOutline))
 	{
@@ -29,9 +28,10 @@ bool FEDomain::SetDomainOutline(const std::vector<C3DPoint>& vDomainOutline)
 }
 
 // Function to verify the domain outline.
-bool FEDomain::VerifyDomain(const std::vector<C3DPoint>& vDomainOutline)
+template<std::size_t dim>
+bool FEDomain<dim>::VerifyDomain(const std::vector<Point<dim>>& vDomainOutline)
 {
-	switch (m_iDimension)
+	switch (dim)
 	{
 		case 1:
 		{
