@@ -14,10 +14,10 @@ FEMatrix FEMatrix::operator+(FEMatrix& otherMatrix)
 	{
 		for (int iColumn = 0; iColumn < m_iColumnNumber; ++iColumn)
 		{
-			if (this->Get(iRow, iColumn) == 0.0 && otherMatrix.Get(iRow, iColumn) == 0.0)
+			if (Get(iRow, iColumn) == 0.0 && otherMatrix.Get(iRow, iColumn) == 0.0)
 				continue;
 
-			MatrixSum.Set(iRow, iColumn, this->Get(iRow, iColumn) + otherMatrix.Get(iRow, iColumn));
+			MatrixSum.Set(iRow, iColumn, Get(iRow, iColumn) + otherMatrix.Get(iRow, iColumn));
 		}
 	}
 
@@ -33,10 +33,10 @@ FEMatrix FEMatrix::operator-(FEMatrix& otherMatrix)
 	{
 		for (int iColumn = 0; iColumn < m_iColumnNumber; ++iColumn)
 		{
-			if (this->Get(iRow, iColumn) == 0.0 && otherMatrix.Get(iRow, iColumn) == 0.0)
+			if (Get(iRow, iColumn) == 0.0 && otherMatrix.Get(iRow, iColumn) == 0.0)
 				continue;
 
-			MatrixDiff.Set(iRow, iColumn, this->Get(iRow, iColumn) - otherMatrix.Get(iRow, iColumn));
+			MatrixDiff.Set(iRow, iColumn, Get(iRow, iColumn) - otherMatrix.Get(iRow, iColumn));
 		}
 	}
 
@@ -52,10 +52,10 @@ FEMatrix FEMatrix::operator*(double& scalar)
 	{
 		for (int iColumn = 0; iColumn < m_iColumnNumber; ++iColumn)
 		{
-			if (this->Get(iRow, iColumn) == 0.0)
+			if (Get(iRow, iColumn) == 0.0)
 				continue;
 
-			MatrixMult.Set(iRow, iColumn, scalar * this->Get(iRow, iColumn));
+			MatrixMult.Set(iRow, iColumn, scalar * Get(iRow, iColumn));
 		}
 	}
 
