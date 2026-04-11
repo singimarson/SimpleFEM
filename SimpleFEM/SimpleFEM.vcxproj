@@ -129,11 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FEDomain.cpp" />
-    <ClCompile Include="FEFunction.cpp" />
-    <ClCompile Include="FEIntegrator.cpp" />
-    <ClCompile Include="FEMesh.cpp" />
-    <ClCompile Include="MeshCreator.cpp" />
+    <ClCompile Include="MeshCreation.cpp" />
     <ClCompile Include="FEObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +138,7 @@
     <ClInclude Include="FEFunction.h" />
     <ClInclude Include="FEIntegrator.h" />
     <ClInclude Include="FEMesh.h" />
-    <ClInclude Include="MeshCreator.h" />
+    <ClInclude Include="MeshCreation.h" />
     <ClInclude Include="FEObject.h" />
     <ClInclude Include="FETypes.h" />
   </ItemGroup>

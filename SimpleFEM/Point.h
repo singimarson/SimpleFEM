@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <stdexcept>
 
 // This is the class responsible for organizing any 3D point and its operations
@@ -10,48 +11,42 @@ class Point
 {
 public:
 	// Constructor
-	Point()
+	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
+	Point() : m_arrCoords({})
 	{
-		for (std::size_t iDimIter = 0; iDimIter < dim; ++iDimIter)
-		{
-			m_arrCoords[iDimIter] = 0.0;
-		}
+	}
+
+	// Constructor with array
+	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
+	Point(const std::array<double, dim>& ptArray) : m_arrCoords(ptArray)
+	{
 	}
 
 	// Constructor in 1 dimension
-	Point(const double& x) : m_arrCoords({ x })
+	template <std::size_t D = dim, typename std::enable_if<D == 1, std::size_t>::type = 0>
+	explicit Point(const double& x) : m_arrCoords({x})
 	{
-		if (dim != 1)
-		{
-			throw std::runtime_error("Point::Point: Invalid dimension for this method of constructing a point.");
-		}
 	}
 
 	// Constructor in 2 dimensions
-	Point(const double& x, const double& y) : m_arrCoords({ x, y })
+	template <std::size_t D = dim, typename std::enable_if<D == 2, std::size_t>::type = 0>
+	explicit Point(const double& x, const double& y) : m_arrCoords({x, y})
 	{
-		if (dim != 2)
-		{
-			throw std::runtime_error("Point::Point: Invalid dimension for this method of constructing a point.");
-		}
 	}
 
 	// Constructor in 3 dimensions
-	Point(const double& x, const double& y, const double& z) : m_arrCoords({ x, y, z })
+	template <std::size_t D = dim, typename std::enable_if<D == 3, std::size_t>::type = 0>
+	explicit Point(const double& x, const double& y, const double& z) : m_arrCoords({x, y, z})
 	{
-		if (dim != 3)
-		{
-			throw std::runtime_error("Point::Point: Invalid dimension for this method of constructing a point.");
-		}
 	}
 
 	// Destructor
 	~Point() = default;
 
 	// Operations and overloads
-	double operator[](const std::size_t& index)
+	double operator[](const std::size_t& index) const
 	{
-		if (index > dim)
+		if (index >= dim)
 		{
 			throw std::runtime_error("Point::operator[]: Index is out of range.");
 		}
@@ -83,16 +78,27 @@ public:
 
 	Point operator-(const Point<dim>& pt)
 	{
-		std::array<double, dim> ptSum;
+		std::array<double, dim> ptDiff;
 		for (int iDimIter = 0; iDimIter < dim; ++iDimIter)
 		{
-			ptSum[iDimIter] = m_arrCoords[iDimIter] - pt[iDimIter];
+			ptDiff[iDimIter] = m_arrCoords[iDimIter] - pt[iDimIter];
 		}
 
-		return Point<dim>(ptSum);
+		return Point<dim>(ptDiff);
 	}
 
-	// Getters and setters
+	// Miscellaneous operations
+
+	// Distance between two points
+	double Distance(const Point<dim>& pt)
+	{
+		double dDistanceSquared = 0.0;
+		for (int iDimIter = 0; iDimIter < dim; ++iDimIter)
+		{
+			dDistanceSquared += (m_arrCoords[iDimIter] - pt[iDimIter]) * (m_arrCoords[iDimIter] - pt[iDimIter]);
+		}
+		return std::sqrt(dDistanceSquared);
+	}
 
 private:
 	std::array<double, dim> m_arrCoords;

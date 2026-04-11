@@ -15,22 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FEMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshCreator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FEDomain.cpp">
+    <ClCompile Include="MeshCreation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FEObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FEFunction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FEIntegrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +32,7 @@
     <ClInclude Include="FEMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MeshCreator.h">
+    <ClInclude Include="MeshCreation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FETypes.h">
