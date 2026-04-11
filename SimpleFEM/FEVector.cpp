@@ -1,0 +1,64 @@
+#include "FEVector.h"
+
+#include <stdexcept>
+
+// General construction
+FEVector::FEVector(const int& iVectorLength) : m_iVectorLength(iVectorLength), m_vVectorElements(std::vector<double>(iVectorLength))
+{}
+
+// Construction for vectors
+FEVector::FEVector(const std::vector<double>& vector) : m_iVectorLength(vector.size()), m_vVectorElements(vector)
+{}
+
+// Addition operator overload
+FEVector FEVector::operator+(FEVector& otherVector)
+{
+	std::vector<double> vecSum(m_iVectorLength);
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		vecSum[iVecIter] = m_vVectorElements[iVecIter] + otherVector.Get(iVecIter);
+	}
+
+	return FEVector(vecSum);
+}
+
+// Subtraction operator overload
+FEVector FEVector::operator-(FEVector& otherVector)
+{
+	std::vector<double> vecDiff(m_iVectorLength);
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		vecDiff[iVecIter] = m_vVectorElements[iVecIter] - otherVector.Get(iVecIter);
+	}
+
+	return FEVector(vecDiff);
+}
+
+// Scalar multiplication operator overload
+FEVector FEVector::operator*(double& scalar)
+{
+	std::vector<double> vecMult(m_iVectorLength);
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		vecMult[iVecIter] = scalar * m_vVectorElements[iVecIter];
+	}
+
+	return FEVector(vecMult);
+}
+
+// Dot product for vectors
+double FEVector::DotProduct(FEVector& otherVector)
+{
+	if (m_iVectorLength != otherVector.GetSize())
+	{
+		throw std::runtime_error("FEVector::DotProduct: These two vectors are different sizes.");
+	}
+
+	double dDotProduct = 0;
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		dDotProduct += m_vVectorElements[iVecIter] * otherVector.Get(iVecIter);
+	}
+
+	return dDotProduct;
+}
