@@ -1,6 +1,8 @@
 #pragma once
 #include <CppUnitTestAssert.h>
 
+#include "../SimpleFEM/FEMatrix.h"
+#include "../SimpleFEM/FEVector.h"
 #include "../SimpleFEM/Point.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -46,6 +48,32 @@ public:
 		Assert::AreEqual(expected[0], actual[0], tolerance, message, pLineInfo);
 		Assert::AreEqual(expected[1], actual[1], tolerance, message, pLineInfo);
 		Assert::AreEqual(expected[2], actual[2], tolerance, message, pLineInfo);
+	}
+
+	// Verify that two FEVectors are equal.
+	static void AreEqual(FEVector expected, FEVector actual, double tolerance = 0.0, const wchar_t* message = NULL, const __LineInfo* pLineInfo = NULL)
+	{
+		Assert::AreEqual(expected.GetSize(), actual.GetSize());
+
+		for (int iVecIter = 0; iVecIter < expected.GetSize(); ++iVecIter)
+		{
+			Assert::AreEqual(expected[iVecIter], actual[iVecIter], tolerance, message, pLineInfo);
+		}
+	}
+
+	// Verify that two FEMatrices are equal.
+	static void AreEqual(FEMatrix expected, FEMatrix actual, double tolerance = 0.0, const wchar_t* message = NULL, const __LineInfo* pLineInfo = NULL)
+	{
+		Assert::AreEqual(expected.GetRowSize(), actual.GetRowSize());
+		Assert::AreEqual(expected.GetColumnSize(), actual.GetColumnSize());
+
+		for (int iRowIter = 0; iRowIter < expected.GetRowSize(); ++iRowIter)
+		{
+			for (int iColumnIter = 0; iColumnIter < expected.GetColumnSize(); ++iColumnIter)
+			{
+				Assert::AreEqual(expected.Get(iRowIter, iColumnIter), actual.Get(iRowIter, iColumnIter), tolerance, message, pLineInfo);
+			}
+		}
 	}
 };
 

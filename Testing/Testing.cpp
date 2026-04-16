@@ -8,7 +8,10 @@
 #include "../SimpleFEM/FEMesh.h"
 #include "../SimpleFEM/FEDomain.h"
 #include "../SimpleFEM/FEIntegrator.h"
+#include "../SimpleFEM/FEMatrix.h"
+#include "../SimpleFEM/FESpace.h"
 #include "../SimpleFEM/FETypes.h"
+#include "../SimpleFEM/FEVector.h"
 #include "../SimpleFEM/MeshCreation.h"
 
 #include <functional>
@@ -246,4 +249,99 @@ namespace Testing
 		const double m_dUpperLimit = 1.0;
 		const int m_iDiscNum = 50;
 	};
+
+	// Linear algebra tests
+	TEST_CLASS(FELinearAlgebraTests)
+	{
+	public:
+		TEST_METHOD(VectorTests)
+		{
+			FEVector vec1({ 1.0, 2.0, 3.0 });
+			FEVector vec2({ 4.0, 5.0, 6.0 });
+
+			// Element accessing
+			CAssert::AreEqual(vec1.Get(0), 1.0);
+			CAssert::AreEqual(vec1[0], 1.0);
+			CAssert::AreEqual(vec1.GetSize(), 3);
+
+			// Operations
+			double scalar = 3.0;
+			FEVector sum({ 5.0, 7.0, 9.0 });
+			FEVector diff({ 3.0, 3.0, 3.0 });
+			FEVector mult({ 3.0, 6.0, 9.0 });
+			CAssert::AreEqual(vec1 + vec2, sum);
+			CAssert::AreEqual(vec2 - vec1, diff);
+			CAssert::AreEqual(scalar * vec1, mult);
+
+			// Vector operations
+			CAssert::AreEqual(vec1.Norm(), std::sqrt(14.0));
+			CAssert::AreEqual(vec1.DotProduct(vec2), 32.0);
+		}
+
+		TEST_METHOD(MatrixTests)
+		{
+			FEMatrix matrix1({ {1.0, 2.0, 3.0}, { 2.0, 3.0, 4.0 }, { 3.0, 4.0, 5.0 } });
+			FEMatrix matrix2({ {1.0, 3.0, 5.0}, { 2.0, 4.0, 6.0 }, { 3.0, 6.0, 7.0 } });
+
+			// matrix characteristics
+			CAssert::AreEqual(matrix1.GetRowSize(), 3);
+			CAssert::AreEqual(matrix1.GetColumnSize(), 3);
+
+			// Getting vectors
+			FEVector matrix1row2({ 2.0, 3.0, 4.0 });
+			FEVector matrix2column3({ 5.0, 6.0, 7.0 });
+			CAssert::AreEqual(matrix1.GetRow(1), matrix1row2);
+			CAssert::AreEqual(matrix2.GetColumn(2), matrix2column3);
+
+			// Operations
+			FEMatrix sum({ {2.0, 5.0, 8.0}, { 4.0, 7.0, 10.0 }, { 6.0, 10.0, 12.0 } });
+			FEMatrix diff({ {0.0, 1.0, 2.0}, { 0.0, 1.0, 2.0 }, { 0.0, 2.0, 2.0 } });
+			CAssert::AreEqual(matrix1 + matrix2, sum);
+			CAssert::AreEqual(matrix2 - matrix1, diff);
+		}
+
+		TEST_METHOD(LinearAlgebraOperations)
+		{
+			FEMatrix matrix1({ {1.0, 2.0, 3.0}, { 2.0, 3.0, 4.0 }, { 3.0, 4.0, 5.0 }, {4.0, 5.0, 6.0} });
+			FEVector vector({ 1.0, 2.0, 3.0 });
+
+			// Matrix Vector product
+			FEVector vecProduct({ 14.0, 20.0, 26.0, 32.0 });
+			CAssert::AreEqual(matrix1 * vector, vecProduct);
+
+			// Matrix-matrix product
+			FEMatrix matrix2({ { 1.0, 2.0, 3.0 }, { 5.0, 2.0, 3.0 }, {7.0, 8.0, 9.0} });
+			FEMatrix matProduct({ {32.0, 30.0, 36.0}, {45.0, 42.0, 51.0}, {58.0, 54.0, 66.0}, {71.0, 66.0, 81.0} });
+			CAssert::AreEqual(matrix1 * matrix2, matProduct);
+
+
+
+		}
+	};
+
+	TEST_CLASS(FESpaceTests)
+	{
+	public:
+		TEST_METHOD(FESpaceImplementation)
+		{
+			// First create mesh
+			// Create the finite element domain
+			const int dim = 1;
+			std::vector<Point<dim>> vEndpoints = { Point<dim>(), Point<dim>(1.0) };
+			std::unique_ptr<FEDomain<dim>> pDomain = std::make_unique<FEDomain<dim>>(vEndpoints);
+			std::unique_ptr<FEMesh<dim>> pMesh = std::make_unique<FEMesh<dim>>(pDomain.get());
+
+			const int iElementNumber = 2;
+			MeshCreation::CreateUniformMesh(pMesh.get(), iElementNumber);
+
+			// Construct finite element space
+			FESpace<dim>::ElementOrder eElementOrder = FESpace<dim>::ElementOrder::eLinear;
+			FESpace<dim> feSpace(pMesh.get(), eElementOrder);
+
+			feSpace.CreateElements();
+
+			bool jeff = false;
+		}
+	};
+
 }

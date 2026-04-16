@@ -135,7 +135,9 @@
     <ClCompile Include="FEVector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FEFunctionLocal.h" />
     <ClInclude Include="FEMatrix.h" />
+    <ClInclude Include="FESpace.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="FEDomain.h" />
     <ClInclude Include="FEFunction.h" />

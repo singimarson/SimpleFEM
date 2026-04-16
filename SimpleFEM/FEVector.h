@@ -17,7 +17,7 @@ public:
 	// Object Type
 	virtual bool SupportsObjectType(const long objType) override
 	{
-		return (FEObject::SupportsObjectType(objType) || objType == FE_OBJ_VECTOR);
+		return (FEObject::SupportsObjectType(objType) || objType == FE_OBJ_TYPE_VECTOR);
 	}
 
 	// Element interaction
@@ -29,9 +29,12 @@ public:
 	FEVector operator+(FEVector& otherVector);
 	FEVector operator-(FEVector& otherVector);
 	FEVector operator*(double& scalar);
+	friend FEVector operator*(double& scalar, FEVector& vector);
 
 	// Vector operations
 	double DotProduct(FEVector& otherVector);
+	double Norm();
+	void Normalize();
 
 	// Getters and setters
 	int GetSize() const { return m_iVectorLength; }

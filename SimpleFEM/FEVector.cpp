@@ -1,5 +1,6 @@
 #include "FEVector.h"
 
+#include <cmath>
 #include <stdexcept>
 
 // General construction
@@ -61,4 +62,31 @@ double FEVector::DotProduct(FEVector& otherVector)
 	}
 
 	return dDotProduct;
+}
+
+// l2 norm for vector
+double FEVector::Norm()
+{
+	double dNormSquared = 0;
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		dNormSquared += m_vVectorElements[iVecIter] * m_vVectorElements[iVecIter];
+	}
+	return std::sqrt(dNormSquared);
+}
+
+// Normalize this vector
+void FEVector::Normalize()
+{
+	double dNorm = Norm();
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		m_vVectorElements[iVecIter] /= dNorm;
+	}
+}
+
+// Left multiplication operator override
+FEVector operator*(double& scalar, FEVector& vector)
+{
+	return vector * scalar;
 }

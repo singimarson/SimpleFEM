@@ -10,7 +10,7 @@ template <std::size_t dim>
 class FEFunction : public FEObject
 {
 public:
-	// Constructor
+	// Constructors
 	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
 	FEFunction(const std::function<double(Point<dim>)>& fFunction) : m_fFunction(fFunction)
 	{
@@ -93,6 +93,7 @@ public:
 
 	// Getters and Setters
 	std::function<double(Point<dim>)> GetMainFunction() const { return m_fFunction; }
+	void SetMainFunction(const std::function<double(Point<dim>)>& function) { m_fFunction = function; }
 
 private:
 	std::function<double(Point<dim>)> m_fFunction;

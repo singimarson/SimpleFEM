@@ -72,7 +72,7 @@ public:
 	// L2 inner product of two functions. This will be defined as the integral of the product of the two functions over the specified bounds.
 	double L2InnerProduct1D(FEFunction<dim>& feFunction1, FEFunction<dim>& feFunction2, const double& dLowerBound, const double& dUpperBound, const int& iIntervalNumber)
 	{
-		FEFunction feFunctionMult = feFunction1 * feFunction2;
+		FEFunction<dim> feFunctionMult = feFunction1 * feFunction2;
 		return Integrate(feFunctionMult, dLowerBound, dUpperBound, iIntervalNumber);
 	}
 

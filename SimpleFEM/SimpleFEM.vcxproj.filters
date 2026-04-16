@@ -59,6 +59,12 @@
     <ClInclude Include="FEVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FEFunctionLocal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FESpace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
