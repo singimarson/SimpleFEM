@@ -10,7 +10,7 @@ FESquareMatrix::FESquareMatrix(const int& iSize, const int& iDiag) : FESquareMat
 {
 	for (int iDiagIter = 0; iDiagIter < iSize; ++iDiagIter)
 	{
-		m_vMatrixElements[iDiagIter][iDiagIter] = iDiag;
+		m_vMatrixElements[(m_iRowNumber + 1) * iDiagIter] = iDiag;
 	}
 }
 

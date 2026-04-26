@@ -15,7 +15,7 @@ namespace
 std::pair<FESquareMatrix, FESquareMatrix> CalculateLU(const FESquareMatrix& A)
 {
 	int iMatrixSize = A.GetRowSize();
-	FESquareMatrix L(iMatrixSize, 1.0);
+	FESquareMatrix L(iMatrixSize, 1);
 	FESquareMatrix U = A;
 
 	FEVector row0 = U.GetRow(0);

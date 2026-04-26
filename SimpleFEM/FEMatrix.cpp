@@ -4,7 +4,7 @@
 
 // Constructor for full matrix
 FEMatrix::FEMatrix(const int& iRowNum, const int& iColNum) : m_iRowNumber(iRowNum), m_iColumnNumber(iColNum),
-	m_vMatrixElements(std::vector<std::vector<double>>(iRowNum, std::vector<double>(iColNum)))
+	m_vMatrixElements(std::vector<double>(iRowNum * iColNum))
 {}
 
 // Constructor for vector of vectors
@@ -12,17 +12,17 @@ FEMatrix::FEMatrix(const std::vector<std::vector<double>>& matrix)
 {
 	// Need to verify that elements of the matrix are valid
 	std::size_t row1Size = matrix.front().size();
-	for (int iRowIter = 0; iRowIter < matrix.size(); ++iRowIter)
+	for (const std::vector<double>& row : matrix)
 	{
-		if (matrix[iRowIter].size() != row1Size)
+		if (row.size() != row1Size)
 		{
 			throw std::runtime_error("FEMatrix::FEMatrix: The row sizes for a matrix need to be consistent.");
 		}
+		m_vMatrixElements.insert(m_vMatrixElements.end(), row.begin(), row.end());
 	}
 
 	m_iRowNumber = static_cast<int>(matrix.size());
 	m_iColumnNumber = static_cast<int>(row1Size);
-	m_vMatrixElements = matrix;
 }
 
 // Gets specific column of matrix
@@ -34,9 +34,11 @@ FEVector FEMatrix::GetColumn(const int& iColumn) const
 	}
 
 	std::vector<double> column;
-	for (const std::vector<double>& row : m_vMatrixElements)
+	int iColumnIter = iColumn;
+	while (iColumnIter < m_vMatrixElements.size())
 	{
-		column.push_back(row[iColumn]);
+		column.push_back(iColumnIter);
+		iColumnIter += m_iRowNumber;
 	}
 
 	return FEVector(column);
@@ -50,10 +52,17 @@ void FEMatrix::SetColumn(const int& iColumn, FEVector& column)
 		throw std::runtime_error("FEMatrix::SetColumn: Parameters are invalid for this matrix.");
 	}
 
-	for (int iColIter = 0; iColIter < m_iRowNumber; ++iColIter)
+	for (int iColumnIter = 0; iColumnIter < column.GetSize(); ++iColumnIter)
 	{
-		m_vMatrixElements[iColIter][iColumn] = column[iColIter];
+		m_vMatrixElements[iColumn + iColumnIter * m_iRowNumber] = column[iColumnIter];
 	}
+}
+
+// Get Row of matrix
+FEVector FEMatrix::GetRow(const int& iRow) const
+{
+	return FEVector(std::vector<double>(m_vMatrixElements.begin() + iRow * m_iRowNumber,
+					m_vMatrixElements.begin() + iRow * (m_iRowNumber + 1) - 1));
 }
 
 // Set row of matrix
@@ -64,9 +73,10 @@ void FEMatrix::SetRow(const int& iRow, FEVector& row)
 		throw std::runtime_error("FEMatrix::SetRow: Parameters are invalid for this matrix.");
 	}
 
+	int iIterStart = iRow * m_iRowNumber;
 	for (int iRowIter = 0; iRowIter < m_iColumnNumber; ++iRowIter)
 	{
-		m_vMatrixElements[iRow][iRowIter] = row[iRowIter];
+		m_vMatrixElements[iIterStart + iRowIter] = row[iRowIter];
 	}
 }
 
@@ -131,9 +141,9 @@ FEMatrix FEMatrix::operator*(double& scalar)
 FEVector FEMatrix::operator*(FEVector& feVector)
 {
 	std::vector<double> product;
-	for (const std::vector<double>& matrixRow : m_vMatrixElements)
+	for (int iRowIter = 0; iRowIter < m_iRowNumber; ++iRowIter)
 	{
-		FEVector rowVector(matrixRow);
+		FEVector rowVector = GetRow(iRowIter);
 		product.push_back(feVector.DotProduct(rowVector));
 	}
 
