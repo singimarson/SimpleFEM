@@ -26,7 +26,7 @@ FEMatrix::FEMatrix(const std::vector<std::vector<double>>& matrix)
 }
 
 // Gets specific column of matrix
-FEVector FEMatrix::GetColumn(const int& iColumn)
+FEVector FEMatrix::GetColumn(const int& iColumn) const
 {
 	if (iColumn >= m_iColumnNumber)
 	{
@@ -40,6 +40,34 @@ FEVector FEMatrix::GetColumn(const int& iColumn)
 	}
 
 	return FEVector(column);
+}
+
+// Set column of matrix to be specified vector
+void FEMatrix::SetColumn(const int& iColumn, FEVector& column)
+{
+	if (column.GetSize() != m_iRowNumber || iColumn >= m_iRowNumber)
+	{
+		throw std::runtime_error("FEMatrix::SetColumn: Parameters are invalid for this matrix.");
+	}
+
+	for (int iColIter = 0; iColIter < m_iRowNumber; ++iColIter)
+	{
+		m_vMatrixElements[iColIter][iColumn] = column[iColIter];
+	}
+}
+
+// Set row of matrix
+void FEMatrix::SetRow(const int& iRow, FEVector& row)
+{
+	if (row.GetSize() != m_iColumnNumber || iRow >= m_iColumnNumber)
+	{
+		throw std::runtime_error("FEMatrix::SetRow: Parameters are invalid for this matrix.");
+	}
+
+	for (int iRowIter = 0; iRowIter < m_iColumnNumber; ++iRowIter)
+	{
+		m_vMatrixElements[iRow][iRowIter] = row[iRowIter];
+	}
 }
 
 // Addition operator overload

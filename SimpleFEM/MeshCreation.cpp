@@ -5,9 +5,9 @@
 
 namespace MeshCreation
 {
-void MeshCreation::CreateUniformMesh(FEMesh<1>* pMesh, const int iElementNumber)
+void MeshCreation::CreateUniformMesh(FEMesh<1>* m_pMesh, const int iElementNumber)
 {
-	if (!pMesh)
+	if (!m_pMesh)
 	{
 		throw std::runtime_error("FEMeshCreator::CreateUniformMesh: Mesh pointer is null.");
 	}
@@ -17,16 +17,16 @@ void MeshCreation::CreateUniformMesh(FEMesh<1>* pMesh, const int iElementNumber)
 		throw std::runtime_error("FEMeshCreator::CreateUniformMesh: Must have an element number greater than 0.");
 	}
 
-	pMesh->SetMeshType(FEMesh<1>::MeshType::eUniform);
+	m_pMesh->SetMeshType(FEMesh<1>::MeshType::eUniform);
 
 	std::unordered_map<int, Point<1>> mapNodes;
 	std::unordered_map<int, std::vector<int>> mapElements;
 
-	FEDomain<1>* pDomain = pMesh->GetDomain();
+	FEDomain<1>* m_pDomain = m_pMesh->GetDomain();
 
 	// If we have dimension 1, then the mesh will always be a line mesh
 	// Reconfigure this to work with Point
-	std::vector<Point<1>> vDomainOutline = pDomain->GetDomainOutline();
+	std::vector<Point<1>> vDomainOutline = m_pDomain->GetDomainOutline();
 	if (vDomainOutline.size() != 2)
 	{
 		throw std::runtime_error("FEMeshCreator::CreateUniformMesh: Size of domain outline is incorrect");
@@ -65,8 +65,8 @@ void MeshCreation::CreateUniformMesh(FEMesh<1>* pMesh, const int iElementNumber)
 		mapElements[iElementIndex] = vecElementConnections;
 	}
 
-	pMesh->SetNodes(mapNodes);
-	pMesh->SetElements(mapElements);
+	m_pMesh->SetNodes(mapNodes);
+	m_pMesh->SetElements(mapElements);
 }
 } // namespace MeshCreation
 

@@ -9,10 +9,12 @@
 #include "../SimpleFEM/FEDomain.h"
 #include "../SimpleFEM/FEIntegrator.h"
 #include "../SimpleFEM/FEMatrix.h"
-#include "../SimpleFEM/FESpace.h"
+#include "../SimpleFEM/FESolver.h"
+#include "../SimpleFEM/FESquareMatrix.h"
 #include "../SimpleFEM/FETypes.h"
 #include "../SimpleFEM/FEVector.h"
 #include "../SimpleFEM/MeshCreation.h"
+#include "../SimpleFEM/SystemBuilder.h"
 
 #include <functional>
 #include <memory>
@@ -62,13 +64,13 @@ namespace Testing
 		TEST_METHOD(DomainGetters)
 		{
 			const std::size_t dim = 1;
-			FEDomain<dim>* pDomain = new FEDomain<dim>();
+			FEDomain<dim>* m_pDomain = new FEDomain<dim>();
 
 			Point<dim> ptA(0.0);
 			Point<dim> ptB(1.0);
 			std::vector<Point<dim>> vDomainPoints = { ptA, ptB };
-			pDomain->SetDomainOutline(vDomainPoints);
-			const std::vector<Point<dim>> vTestDomainPoints = pDomain->GetDomainOutline();
+			m_pDomain->SetDomainOutline(vDomainPoints);
+			const std::vector<Point<dim>> vTestDomainPoints = m_pDomain->GetDomainOutline();
 
 			CAssert::AreEqual(vDomainPoints.size(), vTestDomainPoints.size());
 			for (std::size_t ptIndex = 0; ptIndex < vTestDomainPoints.size(); ++ptIndex)
@@ -76,7 +78,7 @@ namespace Testing
 				CAssert::AreEqual(vDomainPoints[ptIndex][0], vTestDomainPoints[ptIndex][0]);
 			}
 
-			delete pDomain;
+			delete m_pDomain;
 		}
 	};
 
@@ -88,15 +90,15 @@ namespace Testing
 		{
 			// Create the finite element domain
 			const int dim = 1;
-			std::vector<Point<dim>> vEndpoints = { Point<dim>(), Point<dim>(1.0) };
-			std::unique_ptr<FEDomain<dim>> pDomain = std::make_unique<FEDomain<dim>>(vEndpoints);
+			std::vector<Point<dim>> m_vEndpoints = { Point<dim>(), Point<dim>(1.0) };
+			std::unique_ptr<FEDomain<dim>> m_pDomain = std::make_unique<FEDomain<dim>>(m_vEndpoints);
 
 			// Initialize the mesh class, uniform by default
-			std::unique_ptr<FEMesh<dim>> pMesh = std::make_unique<FEMesh<dim>>(pDomain.get());
+			std::unique_ptr<FEMesh<dim>> m_pMesh = std::make_unique<FEMesh<dim>>(m_pDomain.get());
 
 			// MeshCreator class
 			const int iElementNumber = 2;
-			MeshCreation::CreateUniformMesh(pMesh.get(), iElementNumber);
+			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
 
 			// We expect the mesh with 2 elements to look like this:
 			//
@@ -110,7 +112,7 @@ namespace Testing
 			mMeshNodeTest[1] = Point<dim>(0.5);
 			mMeshNodeTest[2] = Point<dim>(1.0);
 
-			std::unordered_map<int, Point<dim>> mMeshNodeResult = pMesh->GetNodes();
+			std::unordered_map<int, Point<dim>> mMeshNodeResult = m_pMesh->GetNodes();
 
 			// These aren't equal, fix the MeshCreator
 			CAssert::AreEqual(mMeshNodeTest.size(), mMeshNodeResult.size());
@@ -298,6 +300,16 @@ namespace Testing
 			FEMatrix diff({ {0.0, 1.0, 2.0}, { 0.0, 1.0, 2.0 }, { 0.0, 2.0, 2.0 } });
 			CAssert::AreEqual(matrix1 + matrix2, sum);
 			CAssert::AreEqual(matrix2 - matrix1, diff);
+
+			// Setting rows and columns
+			FEVector newRow({ 6.0, 6.0, 6.0 });
+			FEVector newColumn({ 5.0, 5.0, 5.0 });
+			FEMatrix matrix1NewRow2({ {1.0, 2.0, 3.0}, { 6.0, 6.0, 6.0 }, { 3.0, 4.0, 5.0 } });
+			FEMatrix matrix2NewColumn3({ {1.0, 3.0, 5.0}, { 2.0, 4.0, 5.0 }, { 3.0, 6.0, 5.0 } });
+			matrix1.SetRow(1, newRow);
+			matrix2.SetColumn(2, newColumn);
+			CAssert::AreEqual(matrix1NewRow2, matrix1);
+			CAssert::AreEqual(matrix2NewColumn3, matrix2);
 		}
 
 		TEST_METHOD(LinearAlgebraOperations)
@@ -319,29 +331,76 @@ namespace Testing
 		}
 	};
 
-	TEST_CLASS(FESpaceTests)
+	// Linear solving tests
+	TEST_CLASS(FELinearSolverTests)
 	{
 	public:
-		TEST_METHOD(FESpaceImplementation)
+		TEST_METHOD(LUDecomposition)
 		{
-			// First create mesh
-			// Create the finite element domain
-			const int dim = 1;
-			std::vector<Point<dim>> vEndpoints = { Point<dim>(), Point<dim>(1.0) };
-			std::unique_ptr<FEDomain<dim>> pDomain = std::make_unique<FEDomain<dim>>(vEndpoints);
-			std::unique_ptr<FEMesh<dim>> pMesh = std::make_unique<FEMesh<dim>>(pDomain.get());
+			FESolver::DirectSolverMethod eMethod = FESolver::DirectSolverMethod::eLUDecomposition;
+			FEVector x = FESolver::SolveSystemDirect(m_matrix1, m_vec, eMethod);
 
-			const int iElementNumber = 2;
-			MeshCreation::CreateUniformMesh(pMesh.get(), iElementNumber);
-
-			// Construct finite element space
-			FESpace<dim>::ElementOrder eElementOrder = FESpace<dim>::ElementOrder::eLinear;
-			FESpace<dim> feSpace(pMesh.get(), eElementOrder);
-
-			feSpace.CreateElements();
-
-			bool jeff = false;
+			CAssert::AreEqual(m_sol, x, 1e-7);
 		}
+
+	private:
+		FESquareMatrix m_matrix1 = FESquareMatrix({ {2.0, -1.0, -2.0}, {-4.0, 6.0, 3.0}, {-4.0, -2.0, 8.0 } });
+		FEVector m_vec = FEVector({ 1.0, 2.0, 2.0 });
+		FEVector m_sol = FEVector({ 4.0, 5.0 / 3.0, 8.0 / 3.0 });
+	};
+
+	// System builder tests
+	TEST_CLASS(SystemBuilder1DTests)
+	{
+	public:
+		TEST_METHOD(SmallMatrixBuildImplementation)
+		{
+			const int iElementNumber = 2;
+			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
+
+			SystemBuilder sysBuilder;
+			FESquareMatrix mSystemMatrix = sysBuilder.CreateSystemMatrix(m_pMesh.get(), m_dOrder, m_eOrder);
+
+			// This can be calculated rather easily with basic knowledge of finite element method
+			std::vector<std::vector<double>> mExpectedMatrix = { {1.0 / 6.0, 1.0 / 12.0, 0.0},
+											   					 {1.0 / 12.0, 1.0 / 3.0, 1.0 / 12.0},
+																 {0.0, 1.0 / 12.0, 1.0 / 6.0} };
+
+			CAssert::AreEqual(mExpectedMatrix, mSystemMatrix, 1e-5);
+		}
+
+		TEST_METHOD(LargerMatrixBuildImplementation)
+		{
+			const int iElementNumber = 10;
+			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
+
+			SystemBuilder sysBuilder;
+			FESquareMatrix mSystemMatrix = sysBuilder.CreateSystemMatrix(m_pMesh.get(), m_dOrder, m_eOrder);
+
+			// This can be calculated rather easily with basic knowledge of finite element method
+			FESquareMatrix mExpectedMatrix(iElementNumber + 1);
+			for (int iMatrixIter = 0; iMatrixIter < mExpectedMatrix.GetRowSize(); ++iMatrixIter)
+			{
+				mExpectedMatrix.Set(iMatrixIter, iMatrixIter, 1.0 / 15.0);
+				if (iMatrixIter < mExpectedMatrix.GetRowSize() - 1)
+					mExpectedMatrix.Set(iMatrixIter, iMatrixIter + 1, 1.0 / 60.0);
+				if (iMatrixIter > 0)
+					mExpectedMatrix.Set(iMatrixIter, iMatrixIter - 1, 1.0 / 60.0);
+			}
+			mExpectedMatrix.Set(0, 0, 1.0 / 30.0);
+			mExpectedMatrix.Set(mExpectedMatrix.GetRowSize() - 1, mExpectedMatrix.GetRowSize() - 1, 1.0 / 30.0);
+
+			CAssert::AreEqual(mExpectedMatrix, mSystemMatrix, 1e-5);
+		}
+
+	private:
+		const int m_iDim = 1;
+		std::vector<Point<1>> m_vEndpoints = { Point<1>(), Point<1>(1.0) };
+		std::unique_ptr<FEDomain<1>> m_pDomain = std::make_unique<FEDomain<1>>(m_vEndpoints);
+		std::unique_ptr<FEMesh<1>> m_pMesh = std::make_unique<FEMesh<1>>(m_pDomain.get());
+
+		SystemBuilder::DerivativeOrder m_dOrder = SystemBuilder::DerivativeOrder::eNone;
+		SystemBuilder::ElementOrder m_eOrder = SystemBuilder::ElementOrder::eLinear;
 	};
 
 }

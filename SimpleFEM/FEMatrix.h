@@ -22,14 +22,17 @@ public:
 	}
 
 	// Element accessing functions
-	double Get(const int& iRow, const int& iColumn) { return m_vMatrixElements[iRow][iColumn]; }
+	double Get(const int& iRow, const int& iColumn) const { return m_vMatrixElements[iRow][iColumn]; }
 	void Set(const int& iRow, const int& iColumn, const double& value) { m_vMatrixElements[iRow][iColumn] = value; }
 
 	int GetRowSize() const { return m_iRowNumber; }
 	int GetColumnSize() const { return m_iColumnNumber; }
 
-	FEVector GetRow(const int& iRow) { return FEVector(m_vMatrixElements[iRow]); }
-	FEVector GetColumn(const int& iColumn);
+	FEVector GetRow(const int& iRow) const { return FEVector(m_vMatrixElements[iRow]); }
+	void SetRow(const int& iRow, FEVector& vector);
+
+	FEVector GetColumn(const int& iColumn) const;
+	void SetColumn(const int& iColumn, FEVector& row);
 
 	// Operator overloads
 	FEMatrix operator+(FEMatrix& otherMatrix);
@@ -39,9 +42,11 @@ public:
 	FEMatrix operator*(FEMatrix& otherMatrix);
 
 
-private:
+protected:
 	int m_iRowNumber = 0;
 	int m_iColumnNumber = 0;
+
+	// todo: refactor this to just be one vector of doubles of size row * column
 	std::vector<std::vector<double>> m_vMatrixElements;
 };
 

@@ -76,7 +76,7 @@ public:
 		return Point<dim>(ptSum);
 	}
 
-	Point operator-(const Point<dim>& pt)
+	Point operator-(const Point<dim>& pt) const
 	{
 		std::array<double, dim> ptDiff;
 		for (int iDimIter = 0; iDimIter < dim; ++iDimIter)
@@ -85,6 +85,15 @@ public:
 		}
 
 		return Point<dim>(ptDiff);
+	}
+
+	// Divide points
+	Point operator/(const Point<dim>& other) const {
+		Point<dim> result;
+		for (std::size_t i = 0; i < dim; ++i) {
+			result[i] = m_arrCoords[i] / other[i];
+		}
+		return result;
 	}
 
 	// Miscellaneous operations

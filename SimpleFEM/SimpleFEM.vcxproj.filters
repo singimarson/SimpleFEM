@@ -27,6 +27,15 @@
     <ClCompile Include="FEVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SystemBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FESquareMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FESolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Point.h">
@@ -62,7 +71,13 @@
     <ClInclude Include="FEFunctionLocal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FESpace.h">
+    <ClInclude Include="SystemBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FESquareMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FESolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

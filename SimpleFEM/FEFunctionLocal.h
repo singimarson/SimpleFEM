@@ -9,6 +9,10 @@ class FEFunctionLocal : public FEFunction<dim>
 public:
 	// Constructors
 	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
+	FEFunctionLocal() : FEFunction<dim>()
+	{ }
+
+	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
 	FEFunctionLocal(const std::function<double(Point<dim>)>& fFunction, const int& iElementNumber) : FEFunction<dim>(fFunction), 
 		m_iElementNumber(iElementNumber) {}
 

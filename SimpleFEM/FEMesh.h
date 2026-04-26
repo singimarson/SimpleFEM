@@ -15,7 +15,7 @@ class FEMesh : public FEObject
 public:
 	// Constructors and destructor
 	template<std::size_t D = dim, typename std::enable_if<D == 1 || D == 2 || D == 3, std::size_t>::type = 0>
-	FEMesh(FEDomain<dim>* pDomain) : FEObject(), m_pDomain(pDomain)
+	FEMesh(FEDomain<dim>* m_pDomain) : FEObject(), m_pDomain(m_pDomain)
 	{
 		// If the dimension is 1, the element shape will always be a line
 		if (dim == 1)
@@ -53,9 +53,9 @@ public:
 	}
 
 	FEDomain<dim>* GetDomain() const { return m_pDomain; }
-	bool SetDomain(FEDomain<dim>* pDomain)
+	bool SetDomain(FEDomain<dim>* m_pDomain)
 	{
-		m_pDomain = pDomain;
+		m_pDomain = m_pDomain;
 		return true;
 	}
 

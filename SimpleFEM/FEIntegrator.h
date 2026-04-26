@@ -174,22 +174,27 @@ private:
 		return dTransform * solution;
 	}
 
-	// Gauss quadrature points and weights for 1D integration (1-5 points so far)
-	std::unordered_map<int, std::vector<double>> FEIntegrator::m_mapGaussPoints =
-	{ {1, {0.0}},
-	  {2, {-0.57735, 0.57735}},
-	  {3, {0.0, -0.774597, 0.774597}},
-	  {4, {-0.339981, 0.339981, -0.861136, 0.861136}},
-	  {5, {0.0, -0.538469, 0.538469, -0.90618, 0.90618} } };
-
-	std::unordered_map<int, std::vector<double>> FEIntegrator::m_mapGaussWeights =
-	{ {1, {2.0}},
-	  {2, {1.0, 1.0}},
-	  {3, {0.888889, 0.555556, 0.555556}},
-	  {4, {0.652145, 0.652145, 0.347855, 0.347855}},
-	  {5, {0.568889, 0.478629, 0.478629, 0.236927, 0.236927} } };
 
 	// Member variables
 	IntegratorMethod m_eIntegratorMethod = IntegratorMethod::eMidpoint;
+
+	static std::unordered_map<int, std::vector<double>> m_mapGaussPoints;
+	static std::unordered_map<int, std::vector<double>> m_mapGaussWeights;
 };
 
+// Gauss quadrature points and weights for 1D integration (1-5 points so far)
+template<std::size_t dim>
+std::unordered_map<int, std::vector<double>> FEIntegrator<dim>::m_mapGaussPoints =
+{ {1, {0.0}},
+  {2, {-0.57735, 0.57735}},
+  {3, {0.0, -0.774597, 0.774597}},
+  {4, {-0.339981, 0.339981, -0.861136, 0.861136}},
+  {5, {0.0, -0.538469, 0.538469, -0.90618, 0.90618} } };
+
+template<std::size_t dim>
+std::unordered_map<int, std::vector<double>> FEIntegrator<dim>::m_mapGaussWeights =
+{ {1, {2.0}},
+  {2, {1.0, 1.0}},
+  {3, {0.888889, 0.555556, 0.555556}},
+  {4, {0.652145, 0.652145, 0.347855, 0.347855}},
+  {5, {0.568889, 0.478629, 0.478629, 0.236927, 0.236927} } };

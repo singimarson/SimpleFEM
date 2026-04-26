@@ -21,15 +21,15 @@ public:
 	}
 
 	// Element interaction
-	double Get(const int& iElementNumber) { return m_vVectorElements[iElementNumber]; }
+	double Get(const int& iElementNumber) const { return m_vVectorElements[iElementNumber]; }
 	void Set(const int& iElementNumber, const double& value) { m_vVectorElements[iElementNumber] = value; }
 
 	// Operator overload
-	double operator[](const int& iElementNumber) { return Get(iElementNumber); }
-	FEVector operator+(FEVector& otherVector);
-	FEVector operator-(FEVector& otherVector);
-	FEVector operator*(double& scalar);
-	friend FEVector operator*(double& scalar, FEVector& vector);
+	double operator[](const int& iElementNumber) const { return Get(iElementNumber); }
+	FEVector operator+(const FEVector& otherVector) const;
+	FEVector operator-(const FEVector& otherVector) const;
+	FEVector operator*(const double& scalar) const;
+	friend FEVector operator*(const double& scalar, const FEVector& vector);
 
 	// Vector operations
 	double DotProduct(FEVector& otherVector);

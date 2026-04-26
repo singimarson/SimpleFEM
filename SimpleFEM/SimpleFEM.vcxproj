@@ -130,14 +130,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FEMatrix.cpp" />
+    <ClCompile Include="FESolver.cpp" />
+    <ClCompile Include="FESquareMatrix.cpp" />
     <ClCompile Include="MeshCreation.cpp" />
     <ClCompile Include="FEObject.cpp" />
     <ClCompile Include="FEVector.cpp" />
+    <ClCompile Include="SystemBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FEFunctionLocal.h" />
     <ClInclude Include="FEMatrix.h" />
-    <ClInclude Include="FESpace.h" />
+    <ClInclude Include="FESolver.h" />
+    <ClInclude Include="FESquareMatrix.h" />
+    <ClInclude Include="SystemBuilder.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="FEDomain.h" />
     <ClInclude Include="FEFunction.h" />

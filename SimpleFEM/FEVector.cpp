@@ -12,7 +12,7 @@ FEVector::FEVector(const std::vector<double>& vector) : m_iVectorLength(vector.s
 {}
 
 // Addition operator overload
-FEVector FEVector::operator+(FEVector& otherVector)
+FEVector FEVector::operator+(const FEVector& otherVector) const
 {
 	std::vector<double> vecSum(m_iVectorLength);
 	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
@@ -24,7 +24,7 @@ FEVector FEVector::operator+(FEVector& otherVector)
 }
 
 // Subtraction operator overload
-FEVector FEVector::operator-(FEVector& otherVector)
+FEVector FEVector::operator-(const FEVector& otherVector) const
 {
 	std::vector<double> vecDiff(m_iVectorLength);
 	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
@@ -36,7 +36,7 @@ FEVector FEVector::operator-(FEVector& otherVector)
 }
 
 // Scalar multiplication operator overload
-FEVector FEVector::operator*(double& scalar)
+FEVector FEVector::operator*(const double& scalar) const
 {
 	std::vector<double> vecMult(m_iVectorLength);
 	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
@@ -45,6 +45,12 @@ FEVector FEVector::operator*(double& scalar)
 	}
 
 	return FEVector(vecMult);
+}
+
+// Left multiplication
+FEVector operator*(const double& scalar, const FEVector& vector)
+{
+	return vector * scalar;
 }
 
 // Dot product for vectors
@@ -83,10 +89,4 @@ void FEVector::Normalize()
 	{
 		m_vVectorElements[iVecIter] /= dNorm;
 	}
-}
-
-// Left multiplication operator override
-FEVector operator*(double& scalar, FEVector& vector)
-{
-	return vector * scalar;
 }
