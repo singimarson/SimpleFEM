@@ -167,8 +167,9 @@ private:
 
 		for (int iQuadIter = 0; iQuadIter < iNodeNumber; ++iQuadIter)
 		{
-			solution += vecGaussWeights[iQuadIter] *
-				feFunction(Point<dim>(dTransform * vecGaussPoints[iQuadIter] + dMidpoint));
+			double dFuncInput = dTransform * vecGaussPoints[iQuadIter] + dMidpoint;
+			double dFuncOutput = feFunction(Point<dim>(dFuncInput));
+			solution += vecGaussWeights[iQuadIter] * dFuncOutput;
 		}
 
 		return dTransform * solution;

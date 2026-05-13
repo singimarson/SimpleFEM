@@ -36,6 +36,9 @@ public:
 	double Norm();
 	void Normalize();
 
+	// Error
+	double L2Error(FEVector& otherVector);
+
 	// Getters and setters
 	int GetSize() const { return m_iVectorLength; }
 

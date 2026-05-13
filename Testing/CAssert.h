@@ -29,6 +29,17 @@ public:
 		Assert::AreEqual(expected, actual, message, pLineInfo);
 	}
 
+	// int vector equality comparison:
+	static void AreEqual(std::vector<int> expected, std::vector<int> actual, const wchar_t* message = NULL, const __LineInfo* pLineInfo = NULL)
+	{
+		Assert::AreEqual(expected.size(), actual.size());
+
+		for (int iVecIter = 0; iVecIter < expected.size(); ++iVecIter)
+		{
+			Assert::AreEqual(expected[iVecIter], actual[iVecIter], message, pLineInfo);
+		}
+	}
+
 	// Verify that two 1D Points are equal.
 	static void AreEqual(Point<1> expected, Point<1> actual, double tolerance = 0.0, const wchar_t* message = NULL, const __LineInfo* pLineInfo = NULL)
 	{

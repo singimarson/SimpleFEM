@@ -29,7 +29,7 @@ std::pair<FESquareMatrix, FESquareMatrix> CalculateLU(const FESquareMatrix& A)
 
 		if (dDiagCoeff == 0)
 		{
-			throw std::runtime_error("FESpace::CreateLinearD0Elements: Number nodes in this element is incorrect.");
+			throw std::runtime_error("FESpace::CreateLinearElements: Number nodes in this element is incorrect.");
 		}
 
 		for (int iRowEditIter = iRowIter + 1; iRowEditIter < iMatrixSize; ++iRowEditIter)

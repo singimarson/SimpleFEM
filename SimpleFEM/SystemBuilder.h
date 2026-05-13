@@ -1,7 +1,10 @@
 #pragma once
 
+#include "FEFunction.h"
 #include "FESquareMatrix.h"
 #include "FEMesh.h"
+
+#include <unordered_map>
 
 class SystemBuilder
 {
@@ -16,15 +19,29 @@ public:
 		eLinear = 0
 	};
 
-	// Derivative order enum
-	enum class DerivativeOrder
+	// struct for PDE terms
+	struct EquationTerms
 	{
-		eNone = 0,
-		eFirstOrder
+		bool m_bD0 = false;
+		bool m_bD1 = false;
 	};
 
-	FESquareMatrix CreateSystemMatrix(FEMesh<1>* m_pMesh, const DerivativeOrder& m_dOrder, const ElementOrder m_eOrder);
+	std::pair<FESquareMatrix, FEVector> CreateSystem(FEMesh<1>* pMesh,
+													 const EquationTerms& terms,
+													 const ElementOrder eOrder,
+													 FEFunction<1>& rhsFunc,
+													 const std::vector<double>& vBoundaryConditions);
 
 private:
-	FESquareMatrix CreateLinearD0Elements(FEMesh<1>* m_pMesh);
+	std::pair<FESquareMatrix, FEVector> CreateLinearElements(FEMesh<1>* pMesh,
+															 const EquationTerms& terms,
+															 FEFunction<1>& rhsFunc,
+															 const std::vector<double>& vBoundaryConditions);
+	double LinearElementFunction(const int& iElementNumber,
+								 const EquationTerms& terms,
+								 const Point<1>& x,
+								 const Point<1>& pt1,
+								 const Point<1>& pt2);
+
+	std::unordered_map<int, double> MatchBCToNode(const std::vector<int>& vBoundaryNodes, const std::vector<double>& vBoundaryConditions);
 };

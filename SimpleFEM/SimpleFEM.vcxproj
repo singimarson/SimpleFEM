@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundaryConditionHandler.cpp" />
     <ClCompile Include="FEMatrix.cpp" />
     <ClCompile Include="FESolver.cpp" />
     <ClCompile Include="FESquareMatrix.cpp" />
@@ -138,6 +139,8 @@
     <ClCompile Include="SystemBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundaryConditionHandler.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="FEFunctionLocal.h" />
     <ClInclude Include="FEMatrix.h" />
     <ClInclude Include="FESolver.h" />

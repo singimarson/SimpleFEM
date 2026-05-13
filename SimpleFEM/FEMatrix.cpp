@@ -37,8 +37,8 @@ FEVector FEMatrix::GetColumn(const int& iColumn) const
 	int iColumnIter = iColumn;
 	while (iColumnIter < m_vMatrixElements.size())
 	{
-		column.push_back(iColumnIter);
-		iColumnIter += m_iRowNumber;
+		column.push_back(m_vMatrixElements[iColumnIter]);
+		iColumnIter += m_iColumnNumber;
 	}
 
 	return FEVector(column);
@@ -61,8 +61,8 @@ void FEMatrix::SetColumn(const int& iColumn, FEVector& column)
 // Get Row of matrix
 FEVector FEMatrix::GetRow(const int& iRow) const
 {
-	return FEVector(std::vector<double>(m_vMatrixElements.begin() + iRow * m_iRowNumber,
-					m_vMatrixElements.begin() + iRow * (m_iRowNumber + 1) - 1));
+	return FEVector(std::vector<double>(m_vMatrixElements.begin() + iRow * m_iColumnNumber,
+					m_vMatrixElements.begin() + m_iColumnNumber * (iRow + 1)));
 }
 
 // Set row of matrix

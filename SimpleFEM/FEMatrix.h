@@ -22,8 +22,8 @@ public:
 	}
 
 	// Element accessing functions
-	double Get(const int& iRow, const int& iColumn) const { return m_vMatrixElements[iRow * m_iRowNumber + iColumn]; }
-	void Set(const int& iRow, const int& iColumn, const double& value) { m_vMatrixElements[iRow * m_iRowNumber + iColumn] = value; };
+	double Get(const int& iRow, const int& iColumn) const { return m_vMatrixElements[iRow * m_iColumnNumber + iColumn]; }
+	void Set(const int& iRow, const int& iColumn, const double& value) { m_vMatrixElements[iRow * m_iColumnNumber + iColumn] = value; };
 
 	int GetRowSize() const { return m_iRowNumber; }
 	int GetColumnSize() const { return m_iColumnNumber; }

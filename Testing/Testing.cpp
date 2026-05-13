@@ -3,6 +3,7 @@
 
 #include "CAssert.h"
 
+#include "../SimpleFEM/Constants.h"
 #include "../SimpleFEM/Point.h"
 #include "../SimpleFEM/FEFunction.h"
 #include "../SimpleFEM/FEMesh.h"
@@ -16,6 +17,7 @@
 #include "../SimpleFEM/MeshCreation.h"
 #include "../SimpleFEM/SystemBuilder.h"
 
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -120,6 +122,10 @@ namespace Testing
 			{
 				CAssert::AreEqual(mMeshNodeTest[iMeshIndex], mMeshNodeResult[iMeshIndex], dTolerance);
 			}
+
+			// Boundary nodes
+			std::vector<int> vExpectedBC({ 0, 2 });
+			CAssert::AreEqual(vExpectedBC, m_pMesh->GetBoundaryNodes());
 		}
 	};
 
@@ -325,9 +331,6 @@ namespace Testing
 			FEMatrix matrix2({ { 1.0, 2.0, 3.0 }, { 5.0, 2.0, 3.0 }, {7.0, 8.0, 9.0} });
 			FEMatrix matProduct({ {32.0, 30.0, 36.0}, {45.0, 42.0, 51.0}, {58.0, 54.0, 66.0}, {71.0, 66.0, 81.0} });
 			CAssert::AreEqual(matrix1 * matrix2, matProduct);
-
-
-
 		}
 	};
 
@@ -349,48 +352,90 @@ namespace Testing
 		FEVector m_sol = FEVector({ 4.0, 5.0 / 3.0, 8.0 / 3.0 });
 	};
 
-	// System builder tests
+	// System builder 1D tests
 	TEST_CLASS(SystemBuilder1DTests)
 	{
 	public:
-		TEST_METHOD(SmallMatrixBuildImplementation)
-		{
-			const int iElementNumber = 2;
-			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
+		// Mainly interested in the system
+		// u''(x) = f(x), u(0) = u(1) = 0
+		//
+		// Consider u(x) = sin(2 * pi * x)
+		// f(x) = -4 * pi^2 * sin(2 * pi * x)
 
-			SystemBuilder sysBuilder;
-			FESquareMatrix mSystemMatrix = sysBuilder.CreateSystemMatrix(m_pMesh.get(), m_dOrder, m_eOrder);
-
-			// This can be calculated rather easily with basic knowledge of finite element method
-			std::vector<std::vector<double>> mExpectedMatrix = { {1.0 / 6.0, 1.0 / 12.0, 0.0},
-											   					 {1.0 / 12.0, 1.0 / 3.0, 1.0 / 12.0},
-																 {0.0, 1.0 / 12.0, 1.0 / 6.0} };
-
-			CAssert::AreEqual(mExpectedMatrix, mSystemMatrix, 1e-5);
-		}
-
-		TEST_METHOD(LargerMatrixBuildImplementation)
+		TEST_METHOD(MatrixBuildImplementationZeroOrder)
 		{
 			const int iElementNumber = 10;
 			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
 
 			SystemBuilder sysBuilder;
-			FESquareMatrix mSystemMatrix = sysBuilder.CreateSystemMatrix(m_pMesh.get(), m_dOrder, m_eOrder);
+			FESquareMatrix mSystemMatrix;
+			FEVector vRHS;
+
+			// Equation would be u(x) = f(x) (silly but this is for testing)
+			m_tTerms.m_bD0 = true;
+			m_tTerms.m_bD1 = false;
+
+			// f(x) = -4 * pi^2 * sin(x)
+			auto func = [](const Point<1>& point) {
+				return -4.0 * M_PI_SQ * std::sin(2 * M_PI * point[0]);
+				};
+			FEFunction<1> rhsFunc(func);
+
+			// Create system matrix
+			// todo: rhs function testing
+			std::tie(mSystemMatrix, vRHS) = sysBuilder.CreateSystem(m_pMesh.get(), m_tTerms, m_eOrder, rhsFunc, m_vBoundaryConditions);
 
 			// This can be calculated rather easily with basic knowledge of finite element method
 			FESquareMatrix mExpectedMatrix(iElementNumber + 1);
-			for (int iMatrixIter = 0; iMatrixIter < mExpectedMatrix.GetRowSize(); ++iMatrixIter)
+			for (int iMatrixIter = 1; iMatrixIter < mExpectedMatrix.GetRowSize() - 1; ++iMatrixIter)
 			{
 				mExpectedMatrix.Set(iMatrixIter, iMatrixIter, 1.0 / 15.0);
-				if (iMatrixIter < mExpectedMatrix.GetRowSize() - 1)
+				if (iMatrixIter < mExpectedMatrix.GetRowSize() - 2)
 					mExpectedMatrix.Set(iMatrixIter, iMatrixIter + 1, 1.0 / 60.0);
-				if (iMatrixIter > 0)
+				if (iMatrixIter > 1)
 					mExpectedMatrix.Set(iMatrixIter, iMatrixIter - 1, 1.0 / 60.0);
 			}
-			mExpectedMatrix.Set(0, 0, 1.0 / 30.0);
-			mExpectedMatrix.Set(mExpectedMatrix.GetRowSize() - 1, mExpectedMatrix.GetRowSize() - 1, 1.0 / 30.0);
+			mExpectedMatrix.Set(0, 0, 1.0);
+			mExpectedMatrix.Set(mExpectedMatrix.GetRowSize() - 1, mExpectedMatrix.GetRowSize() - 1, 1.0);
 
 			CAssert::AreEqual(mExpectedMatrix, mSystemMatrix, 1e-5);
+			CAssert::AreEqual(m_vExpectedVector, vRHS, 1e-5);
+		}
+
+		TEST_METHOD(MatrixBuildImplementationFirstOrder)
+		{
+			const int iElementNumber = 10;
+			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
+
+			SystemBuilder sysBuilder;
+			FESquareMatrix mSystemMatrix;
+			FEVector vRHS;
+
+			// Equation would be u'(x) = f(x)
+			m_tTerms.m_bD0 = false;
+			m_tTerms.m_bD1 = true;
+
+			// f(x) = -4 * pi^2 * sin(x)
+			FEFunction<1> rhsFunc([](const Point<1>& point) { return -4.0 * M_PI_SQ * std::sin(2.0 * M_PI * point[0]); });
+
+			// Create system matrix NEEDS WORK CURRENTLY BROKEN WITH BOUNDARY CONDITIONS
+			std::tie(mSystemMatrix, vRHS) = sysBuilder.CreateSystem(m_pMesh.get(), m_tTerms, m_eOrder, rhsFunc, m_vBoundaryConditions);
+
+			// This can be calculated rather easily with basic knowledge of finite element method
+			FESquareMatrix mExpectedMatrix(iElementNumber + 1);
+			for (int iMatrixIter = 1; iMatrixIter < mExpectedMatrix.GetRowSize() - 1; ++iMatrixIter)
+			{
+				mExpectedMatrix.Set(iMatrixIter, iMatrixIter, 20);
+				if (iMatrixIter < mExpectedMatrix.GetRowSize() - 2)
+					mExpectedMatrix.Set(iMatrixIter, iMatrixIter + 1, -10.0);
+				if (iMatrixIter > 1)
+					mExpectedMatrix.Set(iMatrixIter, iMatrixIter - 1, -10.0);
+			}
+			mExpectedMatrix.Set(0, 0, 1.0);
+			mExpectedMatrix.Set(mExpectedMatrix.GetRowSize() - 1, mExpectedMatrix.GetRowSize() - 1, 1.0);
+
+			CAssert::AreEqual(mExpectedMatrix, mSystemMatrix, 1e-5);
+			CAssert::AreEqual(m_vExpectedVector, vRHS, 1e-5);
 		}
 
 	private:
@@ -398,9 +443,74 @@ namespace Testing
 		std::vector<Point<1>> m_vEndpoints = { Point<1>(), Point<1>(1.0) };
 		std::unique_ptr<FEDomain<1>> m_pDomain = std::make_unique<FEDomain<1>>(m_vEndpoints);
 		std::unique_ptr<FEMesh<1>> m_pMesh = std::make_unique<FEMesh<1>>(m_pDomain.get());
+		std::vector<double> m_vBoundaryConditions = { 0.0, 0.0 };
+		
+		// These values were verified in Symbolab
+		FEVector m_vExpectedVector = FEVector({ 0.0,
+												-2.2451398709,
+												-3.6327126207,
+												-3.6327126207,
+												-2.2451398710,
+												0.0,
+												2.2451398710,
+												3.6327126207,
+												3.6327126207,
+												2.2451398709,
+												0.0 });
 
-		SystemBuilder::DerivativeOrder m_dOrder = SystemBuilder::DerivativeOrder::eNone;
+		SystemBuilder::EquationTerms m_tTerms;
 		SystemBuilder::ElementOrder m_eOrder = SystemBuilder::ElementOrder::eLinear;
 	};
 
+	// Finite element solve tests (method of manufactured solutions
+	TEST_CLASS(FiniteElementSolve1DTests)
+	{
+	public:
+		TEST_METHOD(FEMSolve)
+		{
+			const int iElementNumber = 10;
+			MeshCreation::CreateUniformMesh(m_pMesh.get(), iElementNumber);
+
+			SystemBuilder sysBuilder;
+			FESquareMatrix mSystemMatrix;
+			FEVector vRHS;
+
+			// Equation would be -(u'(x), v'(x)) = (f(x), v(x))
+			m_tTerms.m_bD0 = false;
+			m_tTerms.m_bD1 = true;
+
+			// f(x) = -4 * pi^2 * sin(x)
+			// For the sake of the FEM solve itself, it's easier to set this function to be negative
+			// So what gets pumped into the code is -f(x) here.
+			FEFunction<1> rhsFunc([](const Point<1>& point) { return 4.0 * M_PI_SQ * std::sin(2.0 * M_PI * point[0]); });
+
+			// Create system matrix
+			std::tie(mSystemMatrix, vRHS) = sysBuilder.CreateSystem(m_pMesh.get(), m_tTerms, m_eOrder, rhsFunc, m_vBoundaryConditions);
+
+			// Linear solve WRONG RN
+			FESolver::DirectSolverMethod eMethod = FESolver::DirectSolverMethod::eLUDecomposition;
+			FEVector x = FESolver::SolveSystemDirect(mSystemMatrix, vRHS, eMethod);
+
+			// Now calculate the actual solution on the mesh
+			std::vector<double> vSolution;
+			for (int iNodeIter = 0; iNodeIter < iElementNumber + 1; ++iNodeIter)
+			{
+				double dNodeValue = m_vEndpoints[0][0] + static_cast<double>(iNodeIter) * (m_vEndpoints[1][0] - m_vEndpoints[0][0]) / static_cast<double>(iElementNumber);
+				vSolution.push_back(std::sin(2.0 * M_PI * dNodeValue));
+			}
+			FEVector expected(vSolution);
+
+			CAssert::AreEqual(x.L2Error(expected), 0.0, 1e-5);
+		}
+
+	private:
+		const int m_iDim = 1;
+		std::vector<Point<1>> m_vEndpoints = { Point<1>(), Point<1>(1.0) };
+		std::unique_ptr<FEDomain<1>> m_pDomain = std::make_unique<FEDomain<1>>(m_vEndpoints);
+		std::unique_ptr<FEMesh<1>> m_pMesh = std::make_unique<FEMesh<1>>(m_pDomain.get());
+		std::vector<double> m_vBoundaryConditions = { 0.0, 0.0 };
+
+		SystemBuilder::EquationTerms m_tTerms;
+		SystemBuilder::ElementOrder m_eOrder = SystemBuilder::ElementOrder::eLinear;
+	};
 }

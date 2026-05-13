@@ -90,3 +90,20 @@ void FEVector::Normalize()
 		m_vVectorElements[iVecIter] /= dNorm;
 	}
 }
+
+// Return L2 error between two vectors.
+double FEVector::L2Error(FEVector& otherVector)
+{
+	if (otherVector.GetSize() != m_iVectorLength)
+	{
+		throw std::runtime_error("FEVector::L2Error: These two vectors are different sizes.");
+	}
+
+	double dError = 0.0;
+	for (int iVecIter = 0; iVecIter < m_iVectorLength; ++iVecIter)
+	{
+		dError += std::pow(Get(iVecIter) - otherVector.Get(iVecIter), 2);
+	}
+
+	return std::sqrt(dError);
+}

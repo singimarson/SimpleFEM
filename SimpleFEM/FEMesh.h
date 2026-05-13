@@ -75,6 +75,13 @@ public:
 		return true;
 	}
 
+	std::vector<int> GetBoundaryNodes() const { return m_vBoundaryNodes; }
+	bool SetBoundaryNodes(const std::vector<int>& vBoundaryNodes)
+	{
+		m_vBoundaryNodes = vBoundaryNodes;
+		return true;
+	}
+
 private:
 	FEDomain<dim>* m_pDomain = nullptr;
 
@@ -83,5 +90,6 @@ private:
 
 	std::unordered_map<int, Point<dim>> m_vNodes;		   ///< member variable to store node numbers and coordinates
 	std::unordered_map<int, std::vector<int>> m_vElements; ///< Member variable to store element numbers and connectivity	
+	std::vector<int> m_vBoundaryNodes;					   ///< Member variable to store boundary nodes
 };
 

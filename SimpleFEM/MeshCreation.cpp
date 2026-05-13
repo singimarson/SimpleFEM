@@ -67,6 +67,9 @@ void MeshCreation::CreateUniformMesh(FEMesh<1>* m_pMesh, const int iElementNumbe
 
 	m_pMesh->SetNodes(mapNodes);
 	m_pMesh->SetElements(mapElements);
+
+	// Set boundary nodes, easy with this function because it's the first and last nodes
+	m_pMesh->SetBoundaryNodes({ 0, iElementNumber });
 }
 } // namespace MeshCreation
 
