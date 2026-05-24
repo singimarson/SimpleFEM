@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{932110f0-7077-437e-9315-f308b3455054}</ProjectGuid>
-    <RootNamespace>SimpleFEMexe</RootNamespace>
+    <ProjectGuid>{12d52156-cf39-4edd-8189-727bcd5b6862}</ProjectGuid>
+    <RootNamespace>FrontEnd</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,10 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -106,13 +102,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)/../Submodules/imgui;$(SolutionDir)/../Submodules/imgui/backends</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,35 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Submodules\imgui\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\Submodules\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\Submodules\imgui\imgui.cpp" />
-    <ClCompile Include="..\Submodules\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\Submodules\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\Submodules\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\Submodules\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="AddDomainWindow.cpp" />
-    <ClCompile Include="ComponentWindow.cpp" />
-    <ClCompile Include="DisplayWindow.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="SimpleFEMExe.cpp" />
+    <ClInclude Include="CMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleFEM\SimpleFEM.vcxproj">
-      <Project>{8bacc76a-7144-41db-8199-9d5d41c8abad}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Submodules\imgui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="..\Submodules\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="..\Submodules\imgui\imgui.h" />
-    <ClInclude Include="AddDomainWindow.h" />
-    <ClInclude Include="ComponentWindow.h" />
-    <ClInclude Include="DisplayWindow.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClCompile Include="CMainWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
