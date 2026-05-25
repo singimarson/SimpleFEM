@@ -1,9 +1,10 @@
 #include "ComponentWindow.h"
+#include "DisplayWindow.h"
 #include "imgui.h"
 #include "MainWindow.h"
 
 // Main function for showing the main SimpleFEM window
-void FEWindow::ShowMainWindow(MainWindowObjects& mainWindowObjects)
+void FEWindow::ShowMainWindow(MainWindowObjects& mainWindowObjects, int& iSelectedDomain)
 {
 	if (!ImGui::GetCurrentContext())
 	{
@@ -24,14 +25,12 @@ void FEWindow::ShowMainWindow(MainWindowObjects& mainWindowObjects)
 	fWindowFlags |= ImGuiWindowFlags_NoMove;
 	fWindowFlags |= ImGuiWindowFlags_NoResize;
 	fWindowFlags |= ImGuiWindowFlags_NoCollapse;
-	
+
 	// Uncomment this when we're off to the races.
 	//fWindowFlags |= ImGuiWindowFlags_NoTitleBar;
 
 	// Todo: Not sure how the colors here work but we need to statically set the colors or allow users
 	// to adjust colors. Maybe slap it in the options menu or something
-
-	// Next time: Start making the windows containing the domain/mesh making and parameters, etc.
 
 	if (!ImGui::Begin("SimpleFEM Main Window", nullptr, fWindowFlags))
 	{
@@ -43,8 +42,10 @@ void FEWindow::ShowMainWindow(MainWindowObjects& mainWindowObjects)
 	ShowMainWindowMainMenuBar();
 
 	// Show Component Window
-	ShowComponentWindow(mainWindowObjects);
+	ShowComponentWindow(mainWindowObjects, iSelectedDomain);
 
+	// Display Window
+	ShowDisplayWindow(mainWindowObjects, iSelectedDomain);
 
 	ImGui::End();
 }

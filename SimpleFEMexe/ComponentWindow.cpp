@@ -3,7 +3,7 @@
 #include "ComponentWindow.h"
 
 // Component window, lists domains/meshes/objects, etc.
-void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObjects)
+void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObjects, int& iSelectedDomain)
 {
 	if (!ImGui::GetCurrentContext())
 	{
@@ -15,7 +15,7 @@ void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObject
 	const ImVec2 vWorkSize = pViewport->WorkSize;
 
 	ImGui::SetNextWindowPos(ImVec2(vBasePos.x, vBasePos.y + 20.0f), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(vWorkSize.x * 0.4f, vWorkSize.y * 0.6f), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(vWorkSize.x * 0.3f, vWorkSize.y * 0.6f), ImGuiCond_Always);
 
 	ImGuiWindowFlags fWindowFlags = 0;
 	fWindowFlags |= ImGuiWindowFlags_NoMove;
@@ -27,6 +27,8 @@ void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObject
 		ImGui::End();
 		return;
 	}
+
+	int iNodeClicked = -1;
 
 	// Display list of meshes
 	// Next need to list the actual components.
@@ -48,7 +50,6 @@ void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObject
 			ImGuiTreeNodeFlags_DrawLinesToNodes |
 			ImGuiTreeNodeFlags_OpenOnArrow |
 			ImGuiTreeNodeFlags_OpenOnDoubleClick;
-		int iNodeClicked = -1;
 		static int iSelectionMask = (1 << 2);
 
 		for (int iNodeIter = 0; iNodeIter < mainWindowObjects.vDomains1D.size(); ++iNodeIter)
@@ -74,6 +75,7 @@ void FEWindow::ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObject
 		if (iNodeClicked != -1)
 		{
 			iSelectionMask = (1 << iNodeClicked);           // Click to single-select
+			iSelectedDomain = iNodeClicked;
 		}
 	}
 

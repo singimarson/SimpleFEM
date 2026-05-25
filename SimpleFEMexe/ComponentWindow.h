@@ -2,11 +2,9 @@
 #include "FEDomain.h"
 #include "MainWindow.h"
 
-#include <vector>
-
 namespace FEWindow
 {
 
-void ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObjects);
+void ShowComponentWindow(FEWindow::MainWindowObjects& mainWindowObjects, int& iSelectedDomain);
 
 } // namespace ComponentWindow

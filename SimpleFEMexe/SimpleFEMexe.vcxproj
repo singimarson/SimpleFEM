@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)/../Submodules/imgui;$(SolutionDir)/../Submodules/imgui/backends</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)/../Submodules/imgui;$(SolutionDir)/../Submodules/imgui/backends;$(SolutionDir)/../Submodules/implot</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +137,9 @@
     <ClCompile Include="..\Submodules\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\Submodules\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Submodules\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Submodules\implot\implot.cpp" />
+    <ClCompile Include="..\Submodules\implot\implot_demo.cpp" />
+    <ClCompile Include="..\Submodules\implot\implot_items.cpp" />
     <ClCompile Include="AddDomainWindow.cpp" />
     <ClCompile Include="ComponentWindow.cpp" />
     <ClCompile Include="DisplayWindow.cpp" />
@@ -155,6 +158,8 @@
     <ClInclude Include="..\Submodules\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\Submodules\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="..\Submodules\imgui\imgui.h" />
+    <ClInclude Include="..\Submodules\implot\implot.h" />
+    <ClInclude Include="..\Submodules\implot\implot_internal.h" />
     <ClInclude Include="AddDomainWindow.h" />
     <ClInclude Include="ComponentWindow.h" />
     <ClInclude Include="DisplayWindow.h" />

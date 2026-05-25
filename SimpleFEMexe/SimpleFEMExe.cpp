@@ -7,6 +7,7 @@
 #include "MainWindow.h"
 
 #include "imgui.h"
+#include "implot.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
@@ -60,6 +61,7 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -102,6 +104,7 @@ int main(int, char**)
 
     // Initialize main window objects
     FEWindow::MainWindowObjects mainWindowObjects;
+    int iSelectedDomain = -1;
 
     // Main loop
     bool done = false;
@@ -180,7 +183,7 @@ int main(int, char**)
         }
 
         // 4. SimpleFEM Main Window
-        FEWindow::ShowMainWindow(mainWindowObjects);
+        FEWindow::ShowMainWindow(mainWindowObjects, iSelectedDomain);
 
         // Rendering
         ImGui::Render();
@@ -198,6 +201,7 @@ int main(int, char**)
     // Cleanup
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     CleanupDeviceD3D();

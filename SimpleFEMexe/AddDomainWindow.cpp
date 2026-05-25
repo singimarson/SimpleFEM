@@ -42,8 +42,14 @@ void FEWindow::ShowAddDomainWindow(FEWindow::MainWindowObjects& mainWindowObject
 			{
 				Point<1> ptX0(dX0), ptX1(dX1);
 				FEDomain<1>* domain = new FEDomain<1>({ ptX0, ptX1 });
+				
+				std::string strName = static_cast<std::string>(charDomainName);
 				domain->SetName(static_cast<std::string>(charDomainName));
+
 				mainWindowObjects.vDomains1D.push_back(domain);
+
+				// This is scary right now, this'll need touched when deleting objects starts up
+				mainWindowObjects.mDisplayedDomains[static_cast<int>(mainWindowObjects.mDisplayedDomains.size())] = domain->GetID();
 			}
 			ImGui::CloseCurrentPopup(); 
 		}
